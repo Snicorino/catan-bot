@@ -17,5 +17,6 @@ Methods:
     - Roll Resource -> Give players Resource Cards
     - Place Settlements/Cities/Move Robber -> Steal Card
     - Discard Cards
+    - Trade (with bank or player, ports)
 - RNG Method for dice Roll
 - print/format method to inspect game state visually
