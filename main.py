@@ -1,6 +1,6 @@
 import numpy as np
 import random
-
+"""
 class GameState:
 
   def __init__(self):
@@ -22,11 +22,6 @@ class GameState:
         edges.append(Edge())
       tiles.append(Tile(nodes, edges, i, None, random.randint(2, 12)))  # temporary
     return tiles
-
-
-if __name__=="__main__":
-  print("Hello World")
-  pass
 
 class Node:
   # 7,9,11,11,9,7 represents possible settlement placements
@@ -59,4 +54,122 @@ class Tile:
   def __str__(self) -> str:
     return "index: " + str(self.index) + ", resource: " + str(self.resource) + ", number: " + str(self.number)
 
-gs1 = GameState()
+#gs1 = GameState()
+"""
+
+
+
+class Resource(Enum): # brick, lumber, grain, wool, ore, desert
+  BRICK = 0
+  LUMBER = 1
+  GRAIN = 2
+  WOOL = 3
+  ORE = 4
+  DESERT = 5
+
+class Recipe():
+  def __init__(self):
+    pass
+
+
+class Tile:
+  def __init__(self, resource, dicevalue):
+    self.resource = resource
+    self.dicevalue = dicevalue
+
+class TileSet:
+  def __init__(self):
+    self.tile = [] #for standard board [[3],[4],[5],[4],[3]]x2
+    self.edge = [] #for standard board [[6],[8],[10],[10],[8],[6]]x2
+    self.corner = [] #for standard board [[7],[9],[11],[11],[9],[7]]x2
+
+
+  def gettile(self, i,j):
+    pass
+
+
+  def getcorner(self, i,j):
+    pass
+
+  def getcornerbytiles(self, idx1,idx2,idx3):
+    #some function to convert idx1, idx2, idx3 to corner index
+    pass
+
+  def getlinebycorners(self, idx1, idx2):
+    #some function to convert idx1, idx2 to line index
+    pass
+
+
+class GameState:
+
+  def __init__(self):
+    self.tileset = TileSet()
+  
+
+
+  def getspecialcardnum(self):
+    pass
+
+  def getplayerresourcecardnum(self, id):
+    pass
+
+  def getplayerspecialcardnum(self, id):
+    pass
+
+
+  def action_getspecialcard(self):
+    pass
+
+  def action_placehouse(self):
+    pass
+
+  def action_placestreet(self):
+    pass
+
+  def action_rolldice(self):
+    pass
+
+  def action_proposetrade(self, trade):
+    pass
+
+  
+
+
+class Trade: #maybe just a delta for each resource
+  def __init__():
+    pass
+
+class Player:
+  def __init__():
+    pass
+
+  def turn(state):
+    pass #interact with gamestate
+
+  def evaltrade(offer):
+    pass #return bool
+
+  def getresourcecardnum(self):
+    pass
+
+  def getspecialcardnum(self):
+    pass
+
+
+"""
+Player Visible Gamestate:
+Tilemap (Tiles, Edges, Corners)
+ModifierMap (Settlements, Roads, Robber)
+ResourceCardnum (Bank, Players)
+SpecialCardnum (Bank, Players)
+Own resource/special cards
+Prior Cards gained/traded (Other players)
+Victory Points
+"""
+
+
+if __name__=="__main__":
+  #gs1 = GameState()
+  pass
+
+
