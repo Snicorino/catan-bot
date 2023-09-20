@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from enum import Enum
 """
 class GameState:
 
@@ -76,26 +77,33 @@ class Tile:
   def __init__(self, resource, dicevalue):
     self.resource = resource
     self.dicevalue = dicevalue
+  def __str__(self) -> str:
+    return str(self.resource)[9:] + ";" + str(self.dicevalue)
 
 class TileSet:
   def __init__(self):
-    self.tile = [] #for standard board [[3],[4],[5],[4],[3]]x2
+    #for standard board [[3],[4],[5],[4],[3]]x2
+    self.tile = [[Tile(Resource.GRAIN, 5), Tile(Resource.WOOL, 2), Tile(Resource.GRAIN, 6)],
+                 [Tile(Resource.BRICK, 8), Tile(Resource.GRAIN, 10), Tile(Resource.ORE, 9), Tile(Resource.WOOL, 3)],
+                 [Tile(Resource.LUMBER, 4), Tile(Resource.LUMBER, 3), Tile(Resource.ORE, 11), Tile(Resource.GRAIN, 4), Tile(Resource.ORE, 8)],
+                 [Tile(Resource.LUMBER, 11), Tile(Resource.BRICK, 6), Tile(Resource.WOOL, 5), Tile(Resource.LUMBER, 10)],
+                 [Tile(Resource.WOOL, 12), Tile(Resource.DESERT, 1), Tile(Resource.BRICK, 9)]] 
     self.edge = [] #for standard board [[6],[8],[10],[10],[8],[6]]x2
     self.corner = [] #for standard board [[7],[9],[11],[11],[9],[7]]x2
 
 
-  def gettile(self, i,j):
+  def get_tile(self, i,j):
+    return self.tile[i][j]
+
+
+  def get_corner(self, i,j):
     pass
 
-
-  def getcorner(self, i,j):
-    pass
-
-  def getcornerbytiles(self, idx1,idx2,idx3):
+  def get_corner_by_tiles(self, idx1,idx2,idx3):
     #some function to convert idx1, idx2, idx3 to corner index
     pass
 
-  def getlinebycorners(self, idx1, idx2):
+  def get_line_by_corners(self, idx1, idx2):
     #some function to convert idx1, idx2 to line index
     pass
 
@@ -107,29 +115,29 @@ class GameState:
   
 
 
-  def getspecialcardnum(self):
+  def get_special_card_num(self):
     pass
 
-  def getplayerresourcecardnum(self, id):
+  def get_player_resource_card_num(self, id):
     pass
 
-  def getplayerspecialcardnum(self, id):
+  def get_player_special_card_num(self, id):
     pass
 
 
-  def action_getspecialcard(self):
+  def action_get_special_card(self):
     pass
 
-  def action_placehouse(self):
+  def action_place_settlement(self):
     pass
 
-  def action_placestreet(self):
+  def action_place_road(self):
     pass
 
-  def action_rolldice(self):
+  def action_roll_dice(self):
     pass
 
-  def action_proposetrade(self, trade):
+  def action_propose_trade(self, trade):
     pass
 
   
@@ -146,13 +154,13 @@ class Player:
   def turn(state):
     pass #interact with gamestate
 
-  def evaltrade(offer):
+  def eval_trade(offer):
     pass #return bool
 
-  def getresourcecardnum(self):
+  def get_resource_card_num(self):
     pass
 
-  def getspecialcardnum(self):
+  def get_special_card_num(self):
     pass
 
 
@@ -169,7 +177,8 @@ Victory Points
 
 
 if __name__=="__main__":
-  #gs1 = GameState()
+  #ts = TileSet()
+  #print(ts.get_tile(0,2))
   pass
 
 
