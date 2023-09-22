@@ -88,9 +88,28 @@ class TileSet:
                  [Tile(Resource.LUMBER, 4), Tile(Resource.LUMBER, 3), Tile(Resource.ORE, 11), Tile(Resource.GRAIN, 4), Tile(Resource.ORE, 8)],
                  [Tile(Resource.LUMBER, 11), Tile(Resource.BRICK, 6), Tile(Resource.WOOL, 5), Tile(Resource.LUMBER, 10)],
                  [Tile(Resource.WOOL, 12), Tile(Resource.DESERT, 1), Tile(Resource.BRICK, 9)]] 
+    self.generate_board()
+    for i in self.tile:
+      for j in i:
+        print(str(j) + ", ", end="")
+      print()
+    
     self.edge = [] #for standard board [[6],[8],[10],[10],[8],[6]]x2
     self.corner = [] #for standard board [[7],[9],[11],[11],[9],[7]]x2
 
+  def generate_board(self):
+    availableResources = [Resource.BRICK, Resource.BRICK, Resource.BRICK, Resource.WOOL, Resource.WOOL, Resource.WOOL, Resource.WOOL, Resource.ORE, Resource.ORE, Resource.ORE,
+                          Resource.LUMBER, Resource.LUMBER, Resource.LUMBER, Resource.LUMBER, Resource.GRAIN, Resource.GRAIN, Resource.GRAIN, Resource.GRAIN, Resource.DESERT]
+    availableDiceValues = [2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12]
+    for i in range (len(self.tile)):
+      for j in range(len(self.tile[i])):
+        resourceValue = availableResources.pop(random.randint(0, len(availableResources)-1))
+        if resourceValue != Resource.DESERT:
+          diceValue = availableDiceValues.pop(random.randint(0, len(availableDiceValues)-1))
+          self.tile[i][j] = Tile(resourceValue, diceValue)
+        else: 
+          self.tile[i][j] = Tile(resourceValue, 1)
+  
 
   def get_tile(self, i,j):
     return self.tile[i][j]
@@ -178,7 +197,6 @@ Victory Points
 
 if __name__=="__main__":
   #ts = TileSet()
-  #print(ts.get_tile(0,2))
   pass
 
 
