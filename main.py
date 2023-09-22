@@ -68,10 +68,19 @@ class Resource(Enum): # brick, lumber, grain, wool, ore, desert
   ORE = 4
   DESERT = 5
 
-class Recipe():
-  def __init__(self):
-    pass
-
+class DevCard(Enum):
+  KNIGHT = 0
+  ROAD_BUILD = 1
+  YEAR_OF_PLENTY = 2
+  MONOPOLY = 3
+  VICTORY_POINT = 4
+  
+class Recipe(Enum):
+  #alternative use numbers 0-3
+  ROAD = [Resource.LUMBER, Resource.BRICK]
+  SETTLEMENT = [Resource.LUMBER, Resource.BRICK, Resource.WOOL, Resource.GRAIN]
+  CITY = [Resource.ORE, Resource.ORE, Resource.ORE, Resource.GRAIN, Resource.GRAIN]
+  DEVCARD = [Resource.ORE, Resource.GRAIN, Resource.WOOL]
 
 class Tile:
   def __init__(self, resource, dicevalue):
@@ -97,6 +106,7 @@ class TileSet:
     self.edge = [] #for standard board [[6],[8],[10],[10],[8],[6]]x2
     self.corner = [] #for standard board [[7],[9],[11],[11],[9],[7]]x2
 
+  #problem: don't think distribution of resources and dice values is random
   def generate_board(self):
     availableResources = [Resource.BRICK, Resource.BRICK, Resource.BRICK, Resource.WOOL, Resource.WOOL, Resource.WOOL, Resource.WOOL, Resource.ORE, Resource.ORE, Resource.ORE,
                           Resource.LUMBER, Resource.LUMBER, Resource.LUMBER, Resource.LUMBER, Resource.GRAIN, Resource.GRAIN, Resource.GRAIN, Resource.GRAIN, Resource.DESERT]
@@ -131,11 +141,15 @@ class GameState:
 
   def __init__(self):
     self.tileset = TileSet()
-  
-
+    #14 knights, 2 road buildings, 2 year of plentys, 2 monopolys, 5 victory points
+    self.devset = [DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, 
+                   DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.ROAD_BUILD, DevCard.ROAD_BUILD, DevCard.YEAR_OF_PLENTY, DevCard.YEAR_OF_PLENTY, 
+                   DevCard.MONOPOLY, DevCard.MONOPOLY, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT]
+    #19 of each ressource, individual or together?
+    self.resourceset = []
 
   def get_special_card_num(self):
-    pass
+    return len(self.devset)
 
   def get_player_resource_card_num(self, id):
     pass
@@ -167,9 +181,22 @@ class Trade: #maybe just a delta for each resource
     pass
 
 class Player:
-  def __init__():
-    pass
+  #call cunstructor with gamestate? 
+  def __init__(self, state):
+    self.devset = []
+    self.resourceset = []
+    self.state = state
+  
+  #source either other player or bank, triggered by robbing, dice rolls, trading, dev cards
+  def collect_resource(self, resource: Resource, source: []):
+    idx = random.randint(0, len(source))
+    self.resourceset.append(source.pop(idx))
+  
+  def purchase_dev_card(self, bank):
+    idx = random.randint(0, len(bank))
+    self.devset.append(bank.pop(idx))
 
+  #parameter state not necessary?
   def turn(state):
     pass #interact with gamestate
 
@@ -177,10 +204,10 @@ class Player:
     pass #return bool
 
   def get_resource_card_num(self):
-    pass
+    return len(self.resourceset)
 
   def get_special_card_num(self):
-    pass
+    return len(self.devset)
 
 
 """
@@ -196,7 +223,8 @@ Victory Points
 
 
 if __name__=="__main__":
-  #ts = TileSet()
+  ts = TileSet()
+  #print(Recipe.SETTLEMENT)
   pass
 
 
