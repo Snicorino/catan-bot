@@ -98,10 +98,11 @@ class TileSet:
                  [Tile(Resource.LUMBER, 11), Tile(Resource.BRICK, 6), Tile(Resource.WOOL, 5), Tile(Resource.LUMBER, 10)],
                  [Tile(Resource.WOOL, 12), Tile(Resource.DESERT, 1), Tile(Resource.BRICK, 9)]] 
     self.generate_board()
-    for i in self.tile:
-      for j in i:
-        print(str(j) + ", ", end="")
-      print()
+
+    #for i in self.tile:
+    #  for j in i:
+    #    print(str(j) + ", ", end="")
+    #  print()
     
     self.edge = [] #for standard board [[6],[8],[10],[10],[8],[6]]x2
     self.corner = [] #for standard board [[7],[9],[11],[11],[9],[7]]x2
@@ -147,18 +148,20 @@ class GameState:
                    DevCard.MONOPOLY, DevCard.MONOPOLY, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT, DevCard.VICTORY_POINT]
     #19 of each ressource, individual or together?
     self.resourceset = []
+    #players?
+    self.players = [Player(self, 0), Player(self, 1), Player(self, 2), Player(self, 3)]
 
-  def get_special_card_num(self):
+  def get_dev_card_num(self):
     return len(self.devset)
 
   def get_player_resource_card_num(self, id):
-    pass
+    return self.players[id].get_resource_card_num()
 
-  def get_player_special_card_num(self, id):
-    pass
+  def get_player_dev_card_num(self, id):
+    return self.players[id].get_dev_card_num()
 
 
-  def action_get_special_card(self):
+  def action_get_dev_card(self):
     pass
 
   def action_place_settlement(self):
@@ -182,12 +185,14 @@ class Trade: #maybe just a delta for each resource
 
 class Player:
   #call cunstructor with gamestate? 
-  def __init__(self, state):
+  def __init__(self, state, id):
     self.devset = []
     self.resourceset = []
     self.state = state
+    self.id = id
   
   #source either other player or bank, triggered by robbing, dice rolls, trading, dev cards
+  #should maybe be in gamestate class
   def collect_resource(self, resource: Resource, source: []):
     idx = random.randint(0, len(source))
     self.resourceset.append(source.pop(idx))
@@ -206,7 +211,7 @@ class Player:
   def get_resource_card_num(self):
     return len(self.resourceset)
 
-  def get_special_card_num(self):
+  def get_dev_card_num(self):
     return len(self.devset)
 
 
