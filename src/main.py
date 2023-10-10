@@ -83,21 +83,16 @@ class Recipe(Enum):
   DEVCARD = [Resource.ORE, Resource.GRAIN, Resource.WOOL]
 
 class Tile:
-  def __init__(self, resource, dicevalue):
+  def __init__(self, resource: Resource, dicevalue: int) -> None:
     self.resource = resource
     self.dicevalue = dicevalue
   def __str__(self) -> str:
     return str(self.resource)[9:] + ";" + str(self.dicevalue)
 
 class TileSet:
-  def __init__(self):
+  def __init__(self) -> None:
     #for standard board [[3],[4],[5],[4],[3]]x2
-    self.tile = [[Tile(Resource.GRAIN, 5), Tile(Resource.WOOL, 2), Tile(Resource.GRAIN, 6)],
-                 [Tile(Resource.BRICK, 8), Tile(Resource.GRAIN, 10), Tile(Resource.ORE, 9), Tile(Resource.WOOL, 3)],
-                 [Tile(Resource.LUMBER, 4), Tile(Resource.LUMBER, 3), Tile(Resource.ORE, 11), Tile(Resource.GRAIN, 4), Tile(Resource.ORE, 8)],
-                 [Tile(Resource.LUMBER, 11), Tile(Resource.BRICK, 6), Tile(Resource.WOOL, 5), Tile(Resource.LUMBER, 10)],
-                 [Tile(Resource.WOOL, 12), Tile(Resource.DESERT, 1), Tile(Resource.BRICK, 9)]] 
-    self.generate_board()
+    self.tile = self.generate_board()
 
     #for i in self.tile:
     #  for j in i:
@@ -108,25 +103,32 @@ class TileSet:
     self.corner = [] #for standard board [[7],[9],[11],[11],[9],[7]]x2
 
   #problem: don't think distribution of resources and dice values is random
-  def generate_board(self):
+  def generate_board(self) -> []:
+    initTiles = [[Tile(Resource.GRAIN, 5), Tile(Resource.WOOL, 2), Tile(Resource.GRAIN, 6)],
+                 [Tile(Resource.BRICK, 8), Tile(Resource.GRAIN, 10), Tile(Resource.ORE, 9), Tile(Resource.WOOL, 3)],
+                 [Tile(Resource.LUMBER, 4), Tile(Resource.LUMBER, 3), Tile(Resource.ORE, 11), Tile(Resource.GRAIN, 4), Tile(Resource.ORE, 8)],
+                 [Tile(Resource.LUMBER, 11), Tile(Resource.BRICK, 6), Tile(Resource.WOOL, 5), Tile(Resource.LUMBER, 10)],
+                 [Tile(Resource.WOOL, 12), Tile(Resource.DESERT, 1), Tile(Resource.BRICK, 9)]] 
+    
     availableResources = [Resource.BRICK, Resource.BRICK, Resource.BRICK, Resource.WOOL, Resource.WOOL, Resource.WOOL, Resource.WOOL, Resource.ORE, Resource.ORE, Resource.ORE,
                           Resource.LUMBER, Resource.LUMBER, Resource.LUMBER, Resource.LUMBER, Resource.GRAIN, Resource.GRAIN, Resource.GRAIN, Resource.GRAIN, Resource.DESERT]
     availableDiceValues = [2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12]
-    for i in range (len(self.tile)):
-      for j in range(len(self.tile[i])):
+    for i in range (len(initTiles)):
+      for j in range(len(initTiles[i])):
         resourceValue = availableResources.pop(random.randint(0, len(availableResources)-1))
         if resourceValue != Resource.DESERT:
           diceValue = availableDiceValues.pop(random.randint(0, len(availableDiceValues)-1))
-          self.tile[i][j] = Tile(resourceValue, diceValue)
+          initTiles[i][j] = Tile(resourceValue, diceValue)
         else: 
-          self.tile[i][j] = Tile(resourceValue, 1)
+          initTiles[i][j] = Tile(resourceValue, 1)
+    return initTiles
   
 
-  def get_tile(self, i,j):
+  def get_tile(self, i: int, j: int) -> Tile:
     return self.tile[i][j]
 
 
-  def get_corner(self, i,j):
+  def get_corner(self, i: int, j: int):
     pass
 
   def get_corner_by_tiles(self, idx1,idx2,idx3):
@@ -137,10 +139,13 @@ class TileSet:
     #some function to convert idx1, idx2 to line index
     pass
 
+class Corner:
+  def __init__(self) -> None:
+    pass
 
 class GameState:
 
-  def __init__(self):
+  def __init__(self) -> None:
     self.tileset = TileSet()
     #14 knights, 2 road buildings, 2 year of plentys, 2 monopolys, 5 victory points
     self.devset = [DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, DevCard.KNIGHT, 
@@ -151,41 +156,41 @@ class GameState:
     #players?
     self.players = [Player(self, 0), Player(self, 1), Player(self, 2), Player(self, 3)]
 
-  def get_dev_card_num(self):
+  def get_dev_card_num(self) -> int:
     return len(self.devset)
 
-  def get_player_resource_card_num(self, id):
+  def get_player_resource_card_num(self, id: int) -> int:
     return self.players[id].get_resource_card_num()
 
-  def get_player_dev_card_num(self, id):
+  def get_player_dev_card_num(self, id: int) -> int:
     return self.players[id].get_dev_card_num()
 
 
-  def action_get_dev_card(self):
+  def action_get_dev_card(self) -> None:
     pass
 
-  def action_place_settlement(self):
+  def action_place_settlement(self) -> None:
     pass
 
-  def action_place_road(self):
+  def action_place_road(self) -> None:
     pass
 
-  def action_roll_dice(self):
+  def action_roll_dice(self) -> None:
     pass
 
-  def action_propose_trade(self, trade):
+  def action_propose_trade(self, trade) -> None:
     pass
 
   
 
 
 class Trade: #maybe just a delta for each resource
-  def __init__():
+  def __init__() -> None:
     pass
 
 class Player:
   #call cunstructor with gamestate? 
-  def __init__(self, state, id):
+  def __init__(self, state: GameState, id: int) -> None:
     self.devset = []
     self.resourceset = []
     self.state = state
@@ -197,21 +202,21 @@ class Player:
     idx = random.randint(0, len(source))
     self.resourceset.append(source.pop(idx))
   
-  def purchase_dev_card(self, bank):
+  def purchase_dev_card(self, bank: []):
     idx = random.randint(0, len(bank))
     self.devset.append(bank.pop(idx))
 
   #parameter state not necessary?
-  def turn(state):
+  def turn(state) -> None:
     pass #interact with gamestate
 
-  def eval_trade(offer):
+  def eval_trade(offer) -> bool:
     pass #return bool
 
-  def get_resource_card_num(self):
+  def get_resource_card_num(self) -> int:
     return len(self.resourceset)
 
-  def get_dev_card_num(self):
+  def get_dev_card_num(self) -> int:
     return len(self.devset)
 
 
