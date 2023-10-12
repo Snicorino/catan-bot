@@ -151,17 +151,19 @@ class TileSet:
     return self.corner[i][j]
 
   def get_corner_by_tiles(self, tile1: (int, int), tile2: (int, int), tile3: (int, int)):
-    #some function to convert idx1, idx2, idx3 to corner index, need to be valid connecting tiles
+    #print()
+    #print(tile1, tile2, tile3)
+    #need to be valid connecting tiles
     #tile 1 always top/bottom left, tile2 always top/bottom right, tile3 always peak of triangle (top or bottom)
-    if tile1[0] + 1 == tile2[0] & tile1[1] == tile2[1]:
-      if (tile1[1]+1 == tile3[1] & tile1[0]+1 == tile3[0]): #top is flat, upper half of board
-        return self.corner[0][tile3[1]] #0 temporary
-      if (tile1[1]+1 == tile3[1] & tile1[0] == tile3[0]): #top is flat, lower half of board
-        return self.corner[0][tile3[1]] #0 temporary
-      if (tile1[1]-1 == tile3[1] & tile1[0] == tile3[0]): #top is pointed, upper half
-        return self.corner[0][tile1[1]] #0 temporary
-      if (tile1[1]-1 == tile3[1] & tile1[0]+1 == tile3[0]): #top is pointed, lower half
-        return self.corner[0][tile1[1]] #0 temporary
+    if (tile1[1] + 1 == tile2[1]) & (tile1[0] == tile2[0]):
+      if (tile1[0]+1 == tile3[0]) & (tile1[1]+1 == tile3[1]): #top is flat, upper half of board
+        return self.corner[tile3[0]][2*tile3[1]+1]
+      if (tile1[0]+1 == tile3[0]) & (tile1[1] == tile3[1]): #top is flat, lower half of board
+        return self.corner[tile3[0]][2*tile2[1]]
+      if (tile1[0]-1 == tile3[0]) & (tile1[1] == tile3[1]): #top is pointed, upper half
+        return self.corner[tile1[0]][2*tile2[1]]
+      if (tile1[0]-1 == tile3[0]) & (tile1[1]+1 == tile3[1]): #top is pointed, lower half
+        return self.corner[tile1[0]][2*tile2[1]+1]
     else:
       return None
 

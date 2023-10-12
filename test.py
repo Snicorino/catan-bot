@@ -1,11 +1,23 @@
 import unittest
 from src import main
 
-resource = main.Resource
-tileset = main.TileSet
 
+
+
+
+class TestGetCornerByTiles(unittest.TestCase):
+    def test_get_corner_by_tile(self):
+        tileset = main.TileSet()
+        
+        self.assertEqual(tileset.get_corner_by_tiles((0,0),(0,1),(1,1)), tileset.get_corner(1,3))
+        self.assertEqual(tileset.get_corner_by_tiles((2,1),(2,2),(3,1)), tileset.get_corner(3,4))
+        self.assertEqual(tileset.get_corner_by_tiles((1,0),(1,1),(0,0)), tileset.get_corner(1,2))
+        #self.assertEqual(tileset.get_corner_by_tiles((0,0),(0,1),(1,1)), tileset.get_corner(1,3))
+        
 class TestGenerateBoard(unittest.TestCase):
     def test_generate_board(self):
+        resource = main.Resource
+        tileset = main.TileSet
         tiles = tileset.generate_board(self)
         resources = []
         diceValues = []
