@@ -2,66 +2,8 @@ from typing import Any
 import numpy as np
 import random
 from enum import Enum
-"""
-class GameState:
 
-  def __init__(self):
-    # 4 rows:
-    # row 1: 0-2, row 2: 3-6, row 3: 7-11, row 4: 12-15, row 5: 16-18
-    self.tiles = self.initBoard()
-    for x in self.tiles:
-      print(x)
-    pass
-  # declares tiles array with near empty tiles
-  def initBoard(self):
-    tiles = []
-    for i in range(19):
-      nodes = []
-      edges = []
-      for j in range(6):
-        # manually?
-        nodes.append(Node())
-        edges.append(Edge())
-      tiles.append(Tile(nodes, edges, i, None, random.randint(2, 12)))  # temporary
-    return tiles
-
-class Node:
-  # 7,9,11,11,9,7 represents possible settlement placements
-  def __init__(self):
-    # self.tiles = tiles            # array of connected tiles
-    self.placement = None         # empty, settlement or city
-
-  def placeSettlement():
-    pass
-
-  def placeCity():
-    pass
-
-  def validPlacement() -> bool:
-    pass
-
-class Edge:
-  def __init__(self) -> None:
-    pass
-
-class Tile:
-  # 3,4,5,4,3 represents individual hexagons
-  def __init__(self, nodes, edges, index, resource, number):
-    self.nodes = nodes            # array of 6 nodes connected to tile, nodes[0] is top node, clockwise
-    self.edges = edges            # array of 6 edges connected to tile, edges[0] is top-right edge, connection node 0 and 1, clockwise
-    self.index = index            # index in tiles array from Gamestate
-    self.resource = resource      # brick, lumber, grain, wool, ore, desert
-    self.number = number          # 2-12
-    self.blocked = False          # depending on robber
-  def __str__(self) -> str:
-    return "index: " + str(self.index) + ", resource: " + str(self.resource) + ", number: " + str(self.number)
-
-#gs1 = GameState()
-"""
-
-
-
-class Resource(Enum): # brick, lumber, grain, wool, ore, desert
+class Resource(Enum):
   BRICK = 0
   LUMBER = 1
   GRAIN = 2
@@ -108,13 +50,9 @@ class TileSet:
   def __init__(self) -> None:
     #for standard board [[3],[4],[5],[4],[3]]x2
     self.tile = self.generate_board()
-
-    #for i in self.tile:
-    #  for j in i:
-    #    print(str(j) + ", ", end="")
-    #  print()
     
-    self.edge = [] #for standard board [[6],[8],[10],[10],[8],[6]]x2
+    self.edge = [] #for standard board [[6],[8],[10],[10],[8],[6]]x2 plus vertical edges
+
     #for standard board [[7],[9],[11],[11],[9],[7]]x2
     self.corner = [[Corner(), Corner(), Corner(), Corner(), Corner(), Corner(), Corner()],
                    [Corner(), Corner(), Corner(), Corner(), Corner(), Corner(), Corner(), Corner(), Corner()],
@@ -151,9 +89,8 @@ class TileSet:
     return self.corner[i][j]
 
   def get_corner_by_tiles(self, tile1: (int, int), tile2: (int, int), tile3: (int, int)):
-    #print()
-    #print(tile1, tile2, tile3)
-    #need to be valid connecting tiles
+    #todo: need to be valid connecting tiles
+    
     #tile 1 always top/bottom left, tile2 always top/bottom right, tile3 always peak of triangle (top or bottom)
     if (tile1[1] + 1 == tile2[1]) & (tile1[0] == tile2[0]):
       if (tile1[0]+1 == tile3[0]) & (tile1[1]+1 == tile3[1]): #top is flat, upper half of board
@@ -224,6 +161,7 @@ class Player:
     self.resourceset = []
     self.state = state
     self.id = id
+    self.vp = 0
   
   #source either other player or bank, triggered by robbing, dice rolls, trading, dev cards
   #should maybe be in gamestate class
@@ -247,6 +185,9 @@ class Player:
 
   def get_dev_card_num(self) -> int:
     return len(self.devset)
+  
+  def get_victory_points(self, __name: str) -> Any:
+    return self.vp
 
 
 """
@@ -262,7 +203,6 @@ Victory Points
 
 
 if __name__=="__main__":
-  #ts = TileSet()
   pass
 
 

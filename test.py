@@ -47,7 +47,10 @@ class TestGenerateBoard(unittest.TestCase):
         self.assertEqual(diceValues.count(11), 2)
         self.assertEqual(diceValues.count(12), 1)
         
-
+class TestGetAttribute(unittest.TestCase):
+    def test_get_attribute(self):
+        player = main.Player(None, 0)
+        self.assertEqual(player.get_victory_points('vp'), 0)
 
 
 
