@@ -27,9 +27,11 @@ class Recipe(Enum):
 
 class Corner:
   def __init__(self) -> None:
-    self.settled = False
     self.id = -1
 
+  def can_place_settlement(self, id: int) -> bool:
+    return self.id == -1  #todo: plus no other settlements in surrounding corners
+  
 class Tile:
 
   def __init__(self, resource: Resource, dicevalue: int) -> None:
@@ -88,7 +90,7 @@ class TileSet:
   def get_corner(self, i: int, j: int) -> Corner:
     return self.corner[i][j]
 
-  def get_corner_by_tiles(self, tile1: (int, int), tile2: (int, int), tile3: (int, int)):
+  def get_corner_by_tiles(self, tile1: (int, int), tile2: (int, int), tile3: (int, int)) -> Corner:
     #todo: need to be valid connecting tiles
     
     #tile 1 always top/bottom left, tile2 always top/bottom right, tile3 always peak of triangle (top or bottom)
@@ -104,9 +106,21 @@ class TileSet:
     else:
       return None
 
-  def get_line_by_corners(self, idx1, idx2):
-    #some function to convert idx1, idx2 to line index
+  def get_edge_by_corners(self, idx1, idx2):
+    #some function to convert idx1, idx2 to edge index
     pass
+
+  def get_tiles_by_corner(self, i: int, j: int) -> list[Tile]:
+    #todo: used to value each corner regarding settlement, e.g. calculation with dice values of tiles
+    pass
+
+  def corner_value(self, i: int, j: int) -> int:
+    #todo: temporary, not real value
+    res = 0
+    for x in self.get_tiles_by_corner(i, j):
+      res += x.dicevalue
+    return res
+    
 
 class GameState:
 
@@ -131,17 +145,48 @@ class GameState:
     return self.players[id].get_dev_card_num()
 
 
-  def action_get_dev_card(self) -> None:
-    pass
+  def action_get_dev_card(self, id: int) -> None:
+    if self.players[id].can_purchase(Recipe.DEVCARD):
+      if bool(self.devset): #False if devset empty?
+        self.players[id].resourceset.remove(Resource.GRAIN)
+        self.players[id].resourceset.remove(Resource.WOOL)
+        self.players[id].resourceset.remove(Resource.ORE)
+        #choose random dev card from stack
+        idx = random.randint(0, len(self.devset))
+        #add that dev card to players dev stack
+        self.players[id].devset.append(self.devset.pop(idx))
+      else:
+        print("No more dev cards to purchase")
+    else:
+      print("Not enough resources to purchase dev card")
 
-  def action_place_settlement(self) -> None:
-    pass
+  def action_place_settlement(self, id: int, i: int, j: int) -> None:
+    if self.players[id].can_purchase(Recipe.SETTLEMENT):
+      if self.tileset.get_corner(i, j).can_place_settlement(id):
+        self.tileset.corner[i][j].id = id #use get_corner?
+        self.players[id].vp += 1
+        self.players[id].resourceset.remove(Resource.GRAIN)
+        self.players[id].resourceset.remove(Resource.WOOL)
+        self.players[id].resourceset.remove(Resource.LUMBER)
+        self.players[id].resourceset.remove(Resource.BRICK)
+      else:
+        print("Can't place settlement on wanted corner")
+    else:
+      print("Not enough resources to place settlement")
+      
+
 
   def action_place_road(self) -> None:
     pass
 
   def action_roll_dice(self) -> None:
-    pass
+    r1 = random.randint(1, 6)
+    r2 = random.randint(1, 6)
+    rolledVal = r1 + r2
+    if rolledVal == 7:
+      #robber, discard cards
+      pass
+    #todo: hand out resources to players
 
   def action_propose_trade(self, trade) -> None:
     pass
@@ -164,7 +209,7 @@ class Player:
     self.vp = 0
   
   #source either other player or bank, triggered by robbing, dice rolls, trading, dev cards
-  #should maybe be in gamestate class
+  #should maybe be in gamestate class?
   def collect_resource(self, resource: Resource, source: []):
     idx = random.randint(0, len(source))
     self.resourceset.append(source.pop(idx))
@@ -188,6 +233,21 @@ class Player:
   
   def get_victory_points(self, __name: str) -> Any:
     return self.vp
+  
+  def can_purchase(self, rec: Recipe) -> bool:
+    if rec == Recipe.CITY:
+      return self.resourceset.count(Resource.ORE)>=3 & self.resourceset.count(Resource.GRAIN)>=2
+    if rec == Recipe.SETTLEMENT:
+      return self.resourceset.count(Resource.WOOL)>=1 & self.resourceset.count(Resource.GRAIN)>=1 & self.resourceset.count(Resource.LUMBER)>=1 & self.resourceset.count(Resource.BRICK)>=1
+    if rec == Recipe.ROAD:
+      return self.resourceset.count(Resource.BRICK)>=1 & self.resourceset.count(Resource.LUMBER)>=1
+    if rec == Recipe.DEVCARD:
+      return self.resourceset.count(Resource.GRAIN)>=1 & self.resourceset.count(Resource.WOOL)>=1 & self.resourceset.count(Resource.ORE)>=1
+    else:
+      return None
+
+
+
 
 
 """
