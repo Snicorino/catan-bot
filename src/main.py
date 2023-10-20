@@ -111,16 +111,28 @@ class TileSet:
     pass
 
   def get_tiles_by_corner(self, i: int, j: int) -> list[Tile]:
-    #todo: used to value each corner regarding settlement, e.g. calculation with dice values of tiles
-    pass
+    #todo: LUT?, put outside of method
+    lut = [ [[self.get_tile(0, 0)],[self.get_tile(0, 0)],[self.get_tile(0, 0), self.get_tile(0, 1)], [self.get_tile(0, 1)], [self.get_tile(0, 1), self.get_tile(0, 2)],
+              [self.get_tile(0, 2)], [self.get_tile(0, 2)]],
+            [[self.get_tile(1, 0)], [self.get_tile(1, 0), self.get_tile(0, 0)], [self.get_tile(1, 0), self.get_tile(0, 0), self.get_tile(1, 1)],
+              [self.get_tile(1, 1), self.get_tile(0, 0), self.get_tile(0, 1)], [self.get_tile(1, 1), self.get_tile(0, 1), self.get_tile(1, 2)],
+              [self.get_tile(1, 2), self.get_tile(0, 1), self.get_tile(0, 2)], [self.get_tile(1, 2), self.get_tile(1, 3), self.get_tile(0, 2)],
+              [self.get_tile(1, 3), self.get_tile(0, 2)], [self.get_tile(1, 3)]],
+            []] #todo
+    return lut[i][j]
 
+  # returns value which corresponds to likeliness that a settlement on that corner receives resources at dice roll, ranks corners by value
   def corner_value(self, i: int, j: int) -> int:
-    #todo: temporary, not real value
-    res = 0
+    val = 0
     for x in self.get_tiles_by_corner(i, j):
-      res += x.dicevalue
-    return res
+      val += 6 - abs(7-x.dicevalue)
+    return val
     
+  def print_tiles(self) -> None:
+    for i in self.tile:
+            for j in i:
+                print(j, end=" ")
+            print()
 
 class GameState:
 

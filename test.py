@@ -1,8 +1,13 @@
 import unittest
+import collections.abc
 from src import main
 
 
-
+def get_iterable(x):
+    if isinstance(x, collections.Iterable):
+        return x
+    else:
+        return (x,)
 
 
 class TestGetCornerByTiles(unittest.TestCase):
@@ -13,6 +18,15 @@ class TestGetCornerByTiles(unittest.TestCase):
         self.assertEqual(tileset.get_corner_by_tiles((2,1),(2,2),(3,1)), tileset.get_corner(3,4))
         self.assertEqual(tileset.get_corner_by_tiles((1,0),(1,1),(0,0)), tileset.get_corner(1,2))
         #self.assertEqual(tileset.get_corner_by_tiles((0,0),(0,1),(1,1)), tileset.get_corner(1,3))
+    def test_get_tiles_by_corner(self):
+        tileset = main.TileSet()
+        tileset.print_tiles()
+        corner = (0,0)
+        for x in get_iterable(tileset.get_tiles_by_corner(corner[0], corner[1])):
+            print(x)
+        #self.assertEqual(tileset.get_tiles_by_corner(2,0), tileset.get_tile(0,0))
+        
+    
         
 class TestGenerateBoard(unittest.TestCase):
     def test_generate_board(self):
